@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.valentin.musicplayer.application.appComponent
 import com.valentin.musicplayer.databinding.FragmentSongBinding
+import com.valentin.musicplayer.utils.TimeUtils
 import com.valentin.musicplayer.viewmodel.MainViewModel
 import com.valentin.musicplayer.viewmodel.MainViewModelFactory
 import javax.inject.Inject
@@ -44,6 +45,7 @@ class SongFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupViewModel()
         binding.apply {
+            seekBar.setOnTouchListener { _, _ -> true }
             ivPlay.setOnClickListener {
                 listener.play()
             }
@@ -76,11 +78,17 @@ class SongFragment : Fragment() {
             binding.apply {
                 tvSongName.text = song.name
                 tvSongPerformer.text = song.artist
-
+                tvCurrent.text = TimeUtils.startTime
+                seekBar.progress = 0
+                seekBar.max = song.duration.toInt()
                 Glide.with(requireContext())
                     .load(song.imageUrl)
                     .into(ivSong)
             }
+        }
+        viewModel.currentTime.observe(viewLifecycleOwner) { time ->
+            binding.seekBar.progress = time.toInt()
+            binding.tvCurrent.text = TimeUtils.timeStr(time)
         }
     }
 

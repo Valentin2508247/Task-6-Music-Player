@@ -9,8 +9,10 @@ import android.os.IBinder
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.Timeline
 import com.valentin.musicplayer.application.appComponent
 import com.valentin.musicplayer.databinding.ActivityMainBinding
 import com.valentin.musicplayer.fragments.SongFragment
@@ -19,7 +21,12 @@ import com.valentin.musicplayer.services.MusicService
 import com.valentin.musicplayer.utils.SongUtils
 import com.valentin.musicplayer.viewmodel.MainViewModel
 import com.valentin.musicplayer.viewmodel.MainViewModelFactory
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
+import kotlin.time.Duration
 
 
 class MainActivity : AppCompatActivity(), SongFragment.SongFragmentListener, Player.Listener {
@@ -31,7 +38,7 @@ class MainActivity : AppCompatActivity(), SongFragment.SongFragmentListener, Pla
     private lateinit var viewModel: MainViewModel
 
     private var musicService: MusicService? = null
-
+    private var job: Job? = null
 
     private val boundServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
@@ -51,10 +58,10 @@ class MainActivity : AppCompatActivity(), SongFragment.SongFragmentListener, Pla
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // TODO: display playback info
         appComponent.inject(this)
         viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
         viewModel.mediaTransition(0)
+
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -113,6 +120,32 @@ class MainActivity : AppCompatActivity(), SongFragment.SongFragmentListener, Pla
         val position = musicService?.exoPlayer?.currentWindowIndex
         viewModel.mediaTransition(position)
         Log.d(TAG, "onMediaItemTransition: position $position")
+    }
+
+    override fun onIsPlayingChanged(isPlaying: Boolean) {
+        Log.d(TAG, "Is playing: $isPlaying")
+        if (isPlaying)
+            startJob()
+        else
+            job?.cancel()
+    }
+
+    private fun startJob() {
+        job?.cancel()
+        job = lifecycleScope.launch() {
+            while (true) {
+                delay(1000L)
+                periodicTask()
+            }
+        }
+    }
+
+    private fun periodicTask() {
+        val time = musicService?.exoPlayer?.currentPosition
+        if (time != null) {
+            viewModel.playbackTime(time)
+            Log.d(TAG, "Periodic task. Time: $time")
+        }
     }
 
     private companion object {

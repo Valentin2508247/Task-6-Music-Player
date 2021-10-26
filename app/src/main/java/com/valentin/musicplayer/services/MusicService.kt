@@ -17,7 +17,7 @@ import com.valentin.musicplayer.utils.NotificationUtils
 import com.valentin.musicplayer.utils.SongUtils
 
 
-class MusicService : Service(), Player.Listener {
+class MusicService : Service() {
     // TODO: background execution limits?
     private var musicState = MusicState.STOP
     var exoPlayer: ExoPlayer? = null
@@ -97,7 +97,7 @@ class MusicService : Service(), Player.Listener {
     }
 
     private fun stopMusic() {
-        playerNotificationManager?.setPlayer(null);
+        playerNotificationManager?.setPlayer(null)
 
         exoPlayer?.release()
         exoPlayer = null
@@ -108,14 +108,13 @@ class MusicService : Service(), Player.Listener {
 
     private fun initializePlayer() {
         exoPlayer = SimpleExoPlayer.Builder(this).build()
-        exoPlayer?.addListener(this)
 
         // Audio focus
         val audioAttributes: AudioAttributes = AudioAttributes.Builder()
             .setUsage(C.USAGE_MEDIA)
             .setContentType(C.CONTENT_TYPE_MUSIC)
             .build()
-        (exoPlayer as SimpleExoPlayer).setAudioAttributes(audioAttributes, true);
+        (exoPlayer as SimpleExoPlayer).setAudioAttributes(audioAttributes, true)
 
         val songs = SongUtils.provideSongs(resources).map {
             makeMediaItem(it)
@@ -142,10 +141,6 @@ class MusicService : Service(), Player.Listener {
         mediaSessionConnector = MediaSessionConnector(mediaSession!!)
         mediaSessionConnector!!.setPlayer(exoPlayer)
         mediaSession?.isActive = true
-    }
-
-    override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-        Log.d(TAG, "onMediaItemTransition: position ${exoPlayer?.currentWindowIndex}")
     }
 
     private fun makeMediaItem(song: Song): MediaItem {

@@ -68,10 +68,10 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="8dp"
+        android:src="@drawable/exo_controls_next"
         app:layout_constraintStart_toEndOf="@+id/iv_pause"
         app:layout_constraintTop_toTopOf="@+id/iv_play"
         app:tint="@color/black"
-        android:src="@drawable/exo_controls_next"
         tools:srcCompat="@drawable/exo_controls_next" />
 
     <ImageView
@@ -79,10 +79,10 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginEnd="8dp"
+        android:src="@drawable/exo_controls_previous"
         app:layout_constraintEnd_toStartOf="@+id/iv_play"
         app:layout_constraintTop_toTopOf="@+id/iv_play"
         app:tint="@color/black"
-        android:src="@drawable/exo_controls_previous"
         tools:srcCompat="@drawable/exo_controls_previous" />
 
     <ImageView
@@ -90,10 +90,27 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="8dp"
-        app:tint="@color/black"
         android:src="@drawable/exo_controls_pause"
-        tools:srcCompat="@drawable/exo_controls_pause"
         app:layout_constraintStart_toEndOf="@+id/iv_play"
-        app:layout_constraintTop_toTopOf="@+id/iv_play" />
+        app:layout_constraintTop_toTopOf="@+id/iv_play"
+        app:tint="@color/black"
+        tools:srcCompat="@drawable/exo_controls_pause" />
+
+    <TextView
+        android:id="@+id/tv_length"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="02:37"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_song_performer"
+        app:layout_constraintEnd_toEndOf="@+id/seekBar" />
+
+    <TextView
+        android:id="@+id/tv_current"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="00:00"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_length"
+        app:layout_constraintEnd_toStartOf="@+id/tv_length" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,12 +16,17 @@ class MainViewModel @Inject constructor(private val repository: SongRepository):
 
     private val songs = repository.songs
     val currentSong = MutableLiveData<Song>()
+    val currentTime = MutableLiveData<Long>()
 
     fun mediaTransition(position: Int?) {
         position?.let {
             if (position >= 0 && position < songs.size)
                 currentSong.value = songs[position]
         }
+    }
+
+    fun playbackTime(time: Long) {
+        currentTime.value = time
     }
 
     private companion object {
