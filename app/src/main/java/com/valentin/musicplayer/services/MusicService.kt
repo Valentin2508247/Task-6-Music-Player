@@ -10,11 +10,13 @@ import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
+import com.valentin.musicplayer.application.appComponent
 import com.valentin.musicplayer.playback.DescriptionAdapter
 import com.valentin.musicplayer.playback.MusicState
 import com.valentin.musicplayer.playback.Song
+import com.valentin.musicplayer.repository.SongRepository
 import com.valentin.musicplayer.utils.NotificationUtils
-import com.valentin.musicplayer.utils.SongUtils
+import javax.inject.Inject
 
 
 class MusicService : Service() {
@@ -30,6 +32,9 @@ class MusicService : Service() {
         DescriptionAdapter(this)
     }
 
+    @Inject
+    lateinit var repository: SongRepository
+
     private val binder by lazy { MusicBinder() }
 
     override fun onBind(intent: Intent): IBinder {
@@ -43,6 +48,8 @@ class MusicService : Service() {
     override fun onCreate() {
         super.onCreate()
         Log.d(TAG, "Service onCreate")
+        appComponent.inject(this)
+        Log.d(TAG, "Songs: ${repository.songs}")
         NotificationUtils.createNotificationChannel(this)
         initializePlayer()
     }
@@ -116,7 +123,7 @@ class MusicService : Service() {
             .build()
         (exoPlayer as SimpleExoPlayer).setAudioAttributes(audioAttributes, true)
 
-        val songs = SongUtils.provideSongs(resources).map {
+        val songs = repository.songs.map {
             makeMediaItem(it)
         }
         exoPlayer?.addMediaItems(songs)

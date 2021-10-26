@@ -3,6 +3,7 @@ package com.valentin.musicplayer.di
 import android.content.Context
 import com.valentin.musicplayer.activity.MainActivity
 import com.valentin.musicplayer.fragments.SongFragment
+import com.valentin.musicplayer.services.MusicService
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -23,4 +24,7 @@ interface AppComponent {
 
     // fragments
     fun inject(fragment: SongFragment)
+
+    // service
+    fun inject(service: MusicService)
 }

@@ -1,12 +1,8 @@
 package com.valentin.musicplayer.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.Player
-import com.valentin.musicplayer.activity.MainActivity
 import com.valentin.musicplayer.playback.Song
 import com.valentin.musicplayer.repository.SongRepository
 import javax.inject.Inject

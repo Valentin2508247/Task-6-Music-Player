@@ -25,10 +25,6 @@ class SongFragment : Fragment() {
     lateinit var viewModelFactory: MainViewModelFactory
     private lateinit var viewModel: MainViewModel
 
-//    private val viewModel: MainViewModel by lazy {
-//        ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-//    }
-
     private lateinit var listener: SongFragmentListener
 
     override fun onCreateView(
@@ -79,6 +75,7 @@ class SongFragment : Fragment() {
                 tvSongName.text = song.name
                 tvSongPerformer.text = song.artist
                 tvCurrent.text = TimeUtils.startTime
+                tvLength.text = TimeUtils.timeStr(song.duration)
                 seekBar.progress = 0
                 seekBar.max = song.duration.toInt()
                 Glide.with(requireContext())

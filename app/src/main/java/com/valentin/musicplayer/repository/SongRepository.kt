@@ -5,13 +5,9 @@ import com.valentin.musicplayer.playback.Song
 import com.valentin.musicplayer.utils.SongUtils
 
 class SongRepository(context: Context) {
-    val songs: List<Song>
+    val songs: List<Song> = if (SongUtils.songs == null)
+        SongUtils.provideSongs(context.resources)
+    else
+        SongUtils.songs!!
 
-    init {
-        songs =
-            if (SongUtils.songs == null)
-                SongUtils.provideSongs(context.resources)
-            else
-                SongUtils.songs!!
-    }
 }

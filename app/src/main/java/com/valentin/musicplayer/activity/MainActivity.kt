@@ -12,13 +12,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.Timeline
 import com.valentin.musicplayer.application.appComponent
 import com.valentin.musicplayer.databinding.ActivityMainBinding
 import com.valentin.musicplayer.fragments.SongFragment
 import com.valentin.musicplayer.playback.MusicState
 import com.valentin.musicplayer.services.MusicService
-import com.valentin.musicplayer.utils.SongUtils
 import com.valentin.musicplayer.viewmodel.MainViewModel
 import com.valentin.musicplayer.viewmodel.MainViewModelFactory
 import kotlinx.coroutines.Job
@@ -26,7 +24,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
-import kotlin.time.Duration
 
 
 class MainActivity : AppCompatActivity(), SongFragment.SongFragmentListener, Player.Listener {

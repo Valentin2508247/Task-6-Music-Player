@@ -40,13 +40,7 @@ class DescriptionAdapter(private val context: Context): PlayerNotificationManage
         val song = SongUtils.songs!![position]
 
         val bitmap = map[song.imageUrl]
-        // TODO: if image already cached should return it
-        // Do not know how to load cached bitmap on UI thread using Glide
-//        val bmp = Glide.with(context)
-//            .asBitmap()
-//            .onlyRetrieveFromCache(true)
-//            .load(song.imageUrl)
-//            .get()
+        // if image already cached should return it
 
         if (bitmap == null) {
             Glide.with(context)
