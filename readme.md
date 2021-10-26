@@ -12,5 +12,5 @@
 Дополнительные требования:
 - Поддержка AudioFocus
 - Реализация DI (e.g. Dagger)
- 
-<img alt="music app" src="/screenshots/screenshot.jpg" width="500" height="250" />
+
+![Music Player](https://github.com/Valentin2508247/Task-6-Music-Player/blob/master/screenshots/screenshot.jpg?raw=true) 
