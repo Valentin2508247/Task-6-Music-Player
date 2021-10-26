@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.SongFragment">
+
+    <ImageView
+        android:id="@+id/iv_song"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tv_song_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="На Марсе классно!"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toTopOf="@+id/tv_song_performer"
+        app:layout_constraintStart_toStartOf="@+id/iv_song" />
+
+    <TextView
+        android:id="@+id/tv_song_performer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Noize mc"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toTopOf="@+id/seekBar"
+        app:layout_constraintStart_toStartOf="@+id/tv_song_name" />
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/iv_play"
+        app:layout_constraintEnd_toEndOf="@+id/iv_song"
+        app:layout_constraintStart_toStartOf="@+id/iv_song" />
+
+    <ImageView
+        android:id="@+id/iv_play"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="32dp"
+        android:src="@drawable/exo_controls_play"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.45"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tint="@color/black"
+        tools:srcCompat="@drawable/exo_controls_play" />
+
+    <ImageView
+        android:id="@+id/iv_next"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toEndOf="@+id/iv_pause"
+        app:layout_constraintTop_toTopOf="@+id/iv_play"
+        app:tint="@color/black"
+        android:src="@drawable/exo_controls_next"
+        tools:srcCompat="@drawable/exo_controls_next" />
+
+    <ImageView
+        android:id="@+id/iv_previous"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/iv_play"
+        app:layout_constraintTop_toTopOf="@+id/iv_play"
+        app:tint="@color/black"
+        android:src="@drawable/exo_controls_previous"
+        tools:srcCompat="@drawable/exo_controls_previous" />
+
+    <ImageView
+        android:id="@+id/iv_pause"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        app:tint="@color/black"
+        android:src="@drawable/exo_controls_pause"
+        tools:srcCompat="@drawable/exo_controls_pause"
+        app:layout_constraintStart_toEndOf="@+id/iv_play"
+        app:layout_constraintTop_toTopOf="@+id/iv_play" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
