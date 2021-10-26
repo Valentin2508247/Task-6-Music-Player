@@ -1,31 +1,26 @@
 package com.valentin.musicplayer.services
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.valentin.musicplayer.playback.DescriptionAdapter
 import com.valentin.musicplayer.playback.MusicState
 import com.valentin.musicplayer.playback.Song
+import com.valentin.musicplayer.utils.NotificationUtils
 import com.valentin.musicplayer.utils.SongUtils
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.audio.AudioAttributes
 
 
 class MusicService : Service(), Player.Listener {
     // TODO: background execution limits?
     private var musicState = MusicState.STOP
-    private var exoPlayer: ExoPlayer? = null
+    var exoPlayer: ExoPlayer? = null
 
     private var mediaSession: MediaSessionCompat? = null
     private var mediaSessionConnector: MediaSessionConnector? = null
@@ -48,7 +43,7 @@ class MusicService : Service(), Player.Listener {
     override fun onCreate() {
         super.onCreate()
         Log.d(TAG, "Service onCreate")
-        createNotificationChannel()
+        NotificationUtils.createNotificationChannel(this)
         initializePlayer()
     }
 
@@ -93,10 +88,12 @@ class MusicService : Service(), Player.Listener {
 
     private fun playNext() {
         Log.d(TAG, "Service playNext()")
+        exoPlayer?.seekToNextWindow()
     }
 
     private fun playPrevious() {
         Log.d(TAG, "Service playPrevious()")
+        exoPlayer?.seekToPreviousWindow()
     }
 
     private fun stopMusic() {
@@ -129,8 +126,8 @@ class MusicService : Service(), Player.Listener {
         // Notifications
         playerNotificationManager = PlayerNotificationManager.Builder(
             this,
-            NOTIFICATION_ID,
-            CHANNEL_ID
+            NotificationUtils.NOTIFICATION_ID,
+            NotificationUtils.CHANNEL_ID
         )
             .setMediaDescriptionAdapter(adapter)
             .build()
@@ -144,8 +141,6 @@ class MusicService : Service(), Player.Listener {
         mediaSession = MediaSessionCompat(this, "sample")
         mediaSessionConnector = MediaSessionConnector(mediaSession!!)
         mediaSessionConnector!!.setPlayer(exoPlayer)
-
-        // set active
         mediaSession?.isActive = true
     }
 
@@ -157,24 +152,7 @@ class MusicService : Service(), Player.Listener {
         return MediaItem.fromUri(song.songUrl)
     }
 
-    private fun createNotificationChannel() {
-        // api always >= 26
-        val descriptionText = "Player notifications"
-        val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, IMPORTANCE).apply {
-            description = descriptionText
-        }
-        // Register the channel with the system
-        val notificationManager: NotificationManager =
-            getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(channel)
-    }
-
     private companion object {
         const val TAG = "MusicService"
-        const val CHANNEL_ID = "Exoplayer_Notification"
-        const val CHANNEL_NAME = "Exoplayer_Notifications"
-        const val IMPORTANCE = NotificationManager.IMPORTANCE_DEFAULT
-        const val NOTIFICATION_ID = 2508
     }
 }
-

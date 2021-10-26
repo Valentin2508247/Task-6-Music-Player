@@ -2,21 +2,31 @@ package com.valentin.musicplayer.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
+import com.valentin.musicplayer.application.appComponent
 import com.valentin.musicplayer.databinding.FragmentSongBinding
 import com.valentin.musicplayer.viewmodel.MainViewModel
+import com.valentin.musicplayer.viewmodel.MainViewModelFactory
+import javax.inject.Inject
 
 class SongFragment : Fragment() {
 
     private var _binding: FragmentSongBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: MainViewModel by lazy {
-        ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-    }
+
+    @Inject
+    lateinit var viewModelFactory: MainViewModelFactory
+    private lateinit var viewModel: MainViewModel
+
+//    private val viewModel: MainViewModel by lazy {
+//        ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+//    }
 
     private lateinit var listener: SongFragmentListener
 
@@ -25,12 +35,14 @@ class SongFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        requireContext().appComponent.inject(this)
         _binding = FragmentSongBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupViewModel()
         binding.apply {
             ivPlay.setOnClickListener {
                 listener.play()
@@ -55,6 +67,21 @@ class SongFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun setupViewModel() {
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(MainViewModel::class.java)
+        viewModel.currentSong.observe(viewLifecycleOwner) { song ->
+            Log.d(TAG, "Observe. Song: $song")
+            binding.apply {
+                tvSongName.text = song.name
+                tvSongPerformer.text = song.artist
+
+                Glide.with(requireContext())
+                    .load(song.imageUrl)
+                    .into(ivSong)
+            }
+        }
     }
 
     interface SongFragmentListener {

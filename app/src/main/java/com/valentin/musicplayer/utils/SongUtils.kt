@@ -6,7 +6,6 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.valentin.musicplayer.R
-import com.valentin.musicplayer.activity.MainActivity
 import com.valentin.musicplayer.playback.Song
 import java.io.InputStream
 
@@ -21,7 +20,6 @@ object SongUtils {
             val str = String(b)
 
 
-
             val moshi = Moshi.Builder().build()
             val listType = Types.newParameterizedType(List::class.java, Song::class.java)
             val adapter: JsonAdapter<List<Song>> = moshi.adapter(listType)
@@ -29,20 +27,10 @@ object SongUtils {
             songs = adapter.fromJson(str)!!
             Log.d(TAG, "Songs: $songs")
             return songs!!
-        }
-        else {
+        } else {
             return songs!!
         }
     }
 
-    const val TAG = "SongUtils"
-//    private fun readSongs(context: Context): List<Song> {
-//
-//    }
-//
-//    private fun getStringFromRaw(context: Context): String {
-//        val resources = context.resources
-//        val stream = resources.openRawResource(R.raw.songs)
-//        val result = stream.
-//    }
+    private const val TAG = "SongUtils"
 }

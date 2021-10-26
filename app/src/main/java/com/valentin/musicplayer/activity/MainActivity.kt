@@ -4,45 +4,45 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.content.res.Resources
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
-import com.valentin.musicplayer.R
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.Player
+import com.valentin.musicplayer.application.appComponent
 import com.valentin.musicplayer.databinding.ActivityMainBinding
 import com.valentin.musicplayer.fragments.SongFragment
 import com.valentin.musicplayer.playback.MusicState
-import com.valentin.musicplayer.playback.Song
 import com.valentin.musicplayer.services.MusicService
+import com.valentin.musicplayer.utils.SongUtils
 import com.valentin.musicplayer.viewmodel.MainViewModel
-import java.io.InputStream
-import java.lang.reflect.Type
+import com.valentin.musicplayer.viewmodel.MainViewModelFactory
+import javax.inject.Inject
 
 
-class MainActivity : AppCompatActivity(), SongFragment.SongFragmentListener {
+class MainActivity : AppCompatActivity(), SongFragment.SongFragmentListener, Player.Listener {
 
     lateinit var binding: ActivityMainBinding
-    private val viewModel: MainViewModel by lazy {
-        ViewModelProvider(this).get(MainViewModel::class.java)
-    }
+
+    @Inject
+    lateinit var viewModelFactory: MainViewModelFactory
+    private lateinit var viewModel: MainViewModel
 
     private var musicService: MusicService? = null
 
 
-    private val boundServiceConnection = object: ServiceConnection {
+    private val boundServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
             val binder: MusicService.MusicBinder = service as MusicService.MusicBinder
             musicService = binder.getService()
+            musicService?.exoPlayer?.addListener(this@MainActivity)
             viewModel.isMusicServiceBound = true
         }
 
         override fun onServiceDisconnected(name: ComponentName) {
+            musicService?.exoPlayer?.removeListener(this@MainActivity)
             musicService?.runAction(MusicState.STOP)
             musicService = null
             viewModel.isMusicServiceBound = false
@@ -52,7 +52,10 @@ class MainActivity : AppCompatActivity(), SongFragment.SongFragmentListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // TODO: display playback info
-        // TODO: provide playback controls
+        appComponent.inject(this)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
+        viewModel.mediaTransition(0)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
@@ -104,6 +107,12 @@ class MainActivity : AppCompatActivity(), SongFragment.SongFragmentListener {
     override fun playPrevious() {
         Log.d(TAG, "Play previous")
         musicService?.runAction(MusicState.PLAY_PREVIOUS)
+    }
+
+    override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+        val position = musicService?.exoPlayer?.currentWindowIndex
+        viewModel.mediaTransition(position)
+        Log.d(TAG, "onMediaItemTransition: position $position")
     }
 
     private companion object {

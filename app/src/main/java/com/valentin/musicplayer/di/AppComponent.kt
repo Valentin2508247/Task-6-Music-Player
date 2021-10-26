@@ -5,7 +5,9 @@ import com.valentin.musicplayer.activity.MainActivity
 import com.valentin.musicplayer.fragments.SongFragment
 import dagger.BindsInstance
 import dagger.Component
+import javax.inject.Singleton
 
+@Singleton
 @Component(modules = [AppModule::class])
 interface AppComponent {
 
